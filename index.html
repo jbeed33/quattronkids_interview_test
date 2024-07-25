@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classes</title>
+  </head>
+  <body>
+    <div id="classes">
+      <!-- This is how it should look when displayed: 
+       <h2>Scratch Programming Fun</h2>
+      <h2>Instructor: Alice Johnson</h2>
+      <h3>Mon Fri</h3>
+
+      <h3>Start time: 8:40am</h3>
+      <h3>end time: 9:40am</h3>
+      <h3>size: 8</h3>
+      <h3>cost: $240</h3> -->
+    </div>
+    <button onclick="prevPage()">Prev</button>
+    <button onclick="nextPage()">Next</button>
+  </body>
+  <script>
+    let classEl = document.getElementById("classes");
+    let page = 0;
+    let skip = 3;
+
+    async function nextPage() {
+      page++;
+      await displayData();
+    }
+
+    async function prevPage() {
+      page--;
+      await displayData();
+    }
+
+    async function displayData() {
+      try {
+        const data = await getData();
+        console.log(data);
+        let content = "";
+        for (d of data) {
+          console.log(d);
+          content += `<h2>${d.title} </h2>
+      <h2>Instructor: ${d.instructor}</h2>
+      <h3>${d.daysToMeet}</h3>
+
+      <h3>Start time: ${d.startTime}</h3>
+      <h3>end time: ${d.endTime}</h3>
+      <h3>size: ${d.size} </h3>
+      <h3>cost: $${d.cost} </h3> <hr>`;
+          console.log("Inside the loop");
+        }
+
+        classEl.innerHTML = content;
+      } catch (e) {
+        console.error("An error occured: ", e);
+      }
+    }
+
+    async function getData() {
+      const res = await fetch(`http://localhost:3000/${page}/${skip}`);
+      const data = await res.json();
+      return data;
+    }
+
+    displayData();
+  </script>
+</html>
